@@ -14,10 +14,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ListItem
     private MainActivity mainActivity;
     private ArrayList<Contact> list;
 
+    private String type;
+
     public ContactAdapter (MainActivity mainActivity, ArrayList<Contact> list) {
         this.mainActivity = mainActivity;
         this.list = list;
+        type = "name";
 
+    }
+
+    public void setType (String type) {
+        this.type = type;
     }
 
 
@@ -33,7 +40,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ListItem
     @Override
     public void onBindViewHolder(@NonNull ContactAdapter.ListItemHolder holder, int position) {
         Contact contact = list.get(position);
-        holder.textViewName.setText(contact.getName());
+        if (type.equals("name"))
+            holder.textViewName.setText(contact.getName());
+        else
+            holder.textViewName.setText(contact.getPhone());
 
     }
 

@@ -1,8 +1,8 @@
 package edu.ucdenver.salimlakhani.phonebook2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ArrayList<Contact> list;
     private ContactAdapter contactAdapter;
+    private String type;
+
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         binding.content.recyclerView.setAdapter(contactAdapter);
 
+        prefs = getSharedPreferences("phonebook", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
+        type = prefs.getString("type", "name");
+        contactAdapter.setType(type);
+
 
     }
 
@@ -75,11 +85,27 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_add) {
+            AddContactDialog addContactDialog = new AddContactDialog();
+            addContactDialog.show(getSupportFragmentManager(), "");
+        }
+        else if (id == R.id.action_name) {
+            type = "name";
+            editor.putString("type", type);
+            editor.commit();
+            contactAdapter.setType(type);
+            contactAdapter.notifyDataSetChanged();
+
+        }
+        else if (id == R.id.action_phone) {
+            type = "phone";
+            editor.putString("type", type);
+            editor.commit();
+            contactAdapter.setType(type);
+            contactAdapter.notifyDataSetChanged();
         }
 
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
     }
 
     @Override
